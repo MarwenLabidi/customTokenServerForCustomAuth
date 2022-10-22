@@ -4,6 +4,8 @@ const express = require("express");
 const app = express();
 const { v4: uuidv4 } = require("uuid");
 const PORT = 3000;
+const cors = require("cors")
+app.use(cors())
 
 admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
