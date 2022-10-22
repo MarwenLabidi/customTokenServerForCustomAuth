@@ -1,19 +1,26 @@
-var admin = require("firebase-admin");
-
-var serviceAccount = require("./serviceAccountKey.json");
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
+const express = require("express");
+const app = express();
+const { v4: uuidv4 } = require("uuid");
+const PORT = 3000;
 
 admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
 });
 
-const uid = "some-uid";
+app.get("/", (req, res) => {
+        admin.auth()
+                .createCustomToken(uuidv4())
+                .then((customToken) => {
+                        // Send token back to client
+                        res.json(customToken);
+                })
+                .catch((error) => {
+                        console.log("Error creating custom token:", error);
+                });
+});
 
-admin.auth()
-        .createCustomToken(uid)
-        .then((customToken) => {
-                console.log("customToken: ", customToken);
-                // Send token back to client
-        })
-        .catch((error) => {
-                console.log("Error creating custom token:", error);
-        });
+app.listen(PORT, () => {
+        console.log(`Server is running on PORT: ${PORT}`);
+});
