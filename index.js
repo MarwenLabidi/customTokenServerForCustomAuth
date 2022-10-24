@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const PORT = 3000;
 const cors = require("cors")
 const additionalClaims = {
-        metaMaskAccount: 'marwenlabidimetamask',
+        metaMaskAccount: '',
       };
 app.use(cors())
 
@@ -14,7 +14,8 @@ admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
 });
 
-app.get("/", (req, res) => {
+app.post("/", (req, res) => {
+        additionalClaims.metaMaskAccount = req.body;
         admin.auth()
                 .createCustomToken(uuidv4(),additionalClaims)
                 .then((customToken) => {
